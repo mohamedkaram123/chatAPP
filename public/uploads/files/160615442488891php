@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Bank extends Model
+{
+    protected $table = 'banks';
+    public $timestamps = true;
+
+    use SoftDeletes;
+    protected $fillable = [
+        'name_ar', 'name_en', 'branch_ar', 'branch_en', 'beneficiary_name_ar', 'beneficiary_name_en',
+        'account_number', 'iban', 'swift_code'
+    ];
+    protected $hidden = [
+        'name_ar', 'name_en', 'branch_ar', 'branch_en', 'beneficiary_name_ar', 'beneficiary_name_en',
+    ];
+    protected $appends = ['beneficiary','name','branch'];
+
+    public function setLoloAttribute()
+    {
+        $this->attributes['beneficiary_name'] =  $this->beneficiary_name_ar;
+    }
+
+    public function getBeneficiaryAttribute()
+    {
+
+       
+        if (request()->header('Accept-Language') == 'ar') {
+            return $this->beneficiary_name_ar;
+        }
+        return $this->beneficiary_name_en;
+    }
+
+    public function getBranchAttribute()
+    {
+
+       
+        if (request()->header('Accept-Language') == 'ar') {
+            return $this->branch_ar;
+        }
+        return $this->branch_en;
+    }
+
+    public function getNameAttribute()
+    {
+
+        
+        if (request()->header('Accept-Language') == 'ar') {
+            return $this->name_ar;
+        }
+        return $this->name_en;
+    }
+
+   
+
+}
