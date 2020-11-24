@@ -10,7 +10,6 @@ Vue.use(VueChatScroll)
 import Message from './components/message.vue';
 
 import User from './components/user.vue';
-import Record from './components/records.vue';
 
 //Vue.component('flash', Flash);
 
@@ -21,7 +20,6 @@ import Record from './components/records.vue';
 
 Vue.component('message', Message);
 Vue.component('user', User);
-Vue.component('record', Record);
 
 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -47,7 +45,8 @@ new Vue({
         },
 
         username: '',
-        chatName: "Public"
+        chatName: "Public",
+        domain: 'http://localhost/chatApp',
     },
     computed: {
 
@@ -94,7 +93,7 @@ new Vue({
             formData.append("file", file);
 
             if (this.chatName == 'Public') {
-                axios.post('/uploadfilespublic', formData)
+                axios.post(this.domain + '/uploadfilespublic', formData)
                     .then((response) => {
                         console.log(response);
                         // handle success
@@ -113,7 +112,7 @@ new Vue({
                 formData.append("to_user", this.reciver_id);
                 formData.append("color", 'danger');
 
-                axios.post('/uploadfileprivate', formData)
+                axios.post(this.domain + '/uploadfileprivate', formData)
                     .then((response) => {
                         console.log(response);
                         // handle success
@@ -142,7 +141,7 @@ new Vue({
                     this.chat.message = [];
                     this.chat.user = [];
                     this.chat.color = [];
-                    axios.post('/clearchatingprivate', {
+                    axios.post(this.domain + '/clearchatingprivate', {
                             to_user: this.reciver_id,
 
                         })
@@ -288,7 +287,7 @@ new Vue({
 
 
             if (this.chatName == 'Public') {
-                axios.post('/uploadrecordpublic', fd)
+                axios.post(this.domain + '/uploadrecordpublic', fd)
                     .then((response) => {
                         //   console.log(response);
                         // handle success
@@ -307,7 +306,7 @@ new Vue({
                 fd.append("to_user", this.reciver_id);
                 fd.append("color", 'danger');
 
-                axios.post('/uploadrecordprivate', fd)
+                axios.post(this.domain + '/uploadrecordprivate', fd)
                     .then((response) => {
                         //     console.log(response);
                         // handle success
@@ -356,7 +355,7 @@ new Vue({
             this.chat.color = [];
             this.chatName = "Public";
             this.reciver_id = 0;
-            axios.get('/loadmasseges')
+            axios.get(this.domain + '/loadmasseges')
                 .then((res) => {
                     // handle success
                     //     console.log("ssssssss");
@@ -407,7 +406,7 @@ new Vue({
 
                     //  console.log("sendprivate");
 
-                    axios.post('/sendprivate', {
+                    axios.post(this.domain + '/sendprivate', {
                             message,
                             color: "danger",
                             to_user: this.reciver_id,
@@ -426,7 +425,7 @@ new Vue({
                         })
                 } else {
                     // console.log("send");
-                    axios.post('/send', {
+                    axios.post(this.domain + '/send', {
                             message: message,
                             color: "danger"
 
@@ -460,7 +459,7 @@ new Vue({
             this.chat.color = [];
             this.reciver_id = val.id;
             this.chatName = val.name;
-            axios.post('/loadmassegesprivate', {
+            axios.post(this.domain + '/loadmassegesprivate', {
                     reciver_id: val.id
                 })
                 .then((res) => {
@@ -533,7 +532,7 @@ new Vue({
     },
     created() {
 
-        axios.get('/loadusers')
+        axios.get(this.domain + '/loadusers')
             .then((res) => {
 
                 res.data.forEach(element => {
@@ -554,7 +553,7 @@ new Vue({
 
         this.img_load = true;
 
-        axios.get('/loadmasseges')
+        axios.get(this.domain + '/loadmasseges')
             .then((res) => {
                 // handle success
                 //    console.log(res);
